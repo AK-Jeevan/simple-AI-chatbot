@@ -18,7 +18,7 @@ To run this chatbot, ensure you have the following installed:
 Python 3.x
 Pillow Library: Install using: pip install Pillow
 
-Future Improvements
+Future Improvements:
 Add natural language processing for more dynamic responses.
 Enhance the chatbot with additional features like voice interaction.
 Support saving multiple generated images with unique names.
