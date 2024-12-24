@@ -1,0 +1,84 @@
+from PIL import Image, ImageDraw, ImageFont
+import os
+
+def create_image_with_text(text, output_path="output_image.png"):
+    """
+    Generate an image with the given text.
+    """
+    # Image dimensions
+    width, height = 800, 400
+    background_color = "black"
+    text_color = "white"
+    
+    # Create a blank image
+    image = Image.new("RGB", (width, height), color=background_color)
+    draw = ImageDraw.Draw(image)
+    
+    # Define font (use default if a custom font isn't available)
+    try:
+        font = ImageFont.truetype("arial.ttf", size=40)
+    except IOError:
+        font = ImageFont.load_default()
+    
+    # Calculate text position to center it
+    text_bbox = draw.textbbox((0, 0), text, font=font)
+    text_width, text_height = text_bbox[2] - text_bbox[0], text_bbox[3] - text_bbox[1]
+    text_x = (width - text_width) // 2
+    text_y = (height - text_height) // 2
+    
+    # Add text to the image
+    draw.text((text_x, text_y), text, fill=text_color, font=font)
+    
+    # Save the image
+    image.save(output_path)
+    return image  # Return the image object instead of just the path
+
+def chatbot():
+    print("Hello! I am Arial. Type 'quit' to exit.")
+    
+    # Predefined responses
+    responses = {
+        "hello": "Hi there! How can I assist you today?",
+        "how are you": "I'm just a bunch of code, but I'm doing great! How about you?",
+        "name": "I am Arial, your virtual assistant.",
+        "weather": "I can't predict the weather, but it's always a good day to learn Python!",
+        "generate an image": "I can generate an image with your text. Just type the text you want in the image.",
+        "bye": "Goodbye! Have a nice day!"
+    }
+    
+    while True:
+        # Get user input
+        user_input = input("Message Arial: \n").strip().lower()  # Convert input to lowercase
+        
+        if user_input == "quit":
+            print("Arial: Goodbye! It was nice talking to you.")
+            break
+        
+        # Check for "generate an image" keyword
+        if user_input.startswith("generate an image with the text"):
+            text_for_image = user_input.replace("generate an image with the text", "").strip()
+            
+            # Handle case where no text is provided
+            if not text_for_image:
+                print("Arial: Please provide the text you want on the image. Example: 'generate an image with the text Hello, World!'")
+                continue
+            
+            # Generate the image
+            image = create_image_with_text(text_for_image)
+            print(f"Arial: I created an image with your text! Here's the Image.")
+            image.show()  # Display the image
+            continue
+        
+        # Search for a predefined response
+        found_response = False
+        for keyword, reply in responses.items():
+            if keyword in user_input:
+                print(f"Arial: {reply}")
+                found_response = True
+                break
+        
+        if not found_response:
+            print("Arial: I'm sorry, I didn't understand that. Can you try again?")
+
+# Run the chatbot
+chatbot()
